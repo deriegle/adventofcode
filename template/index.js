@@ -2,8 +2,11 @@ const fs = require('fs');
 const path = require('path');
 
 function parseFile() {
-  const lines =  fs.readFileSync(path.join(__dirname, './input.txt'), 'utf-8').split('\n').filter(Boolean);
-  return lines;
+  const lines =  fs.readFileSync(path.join(__dirname, './input.txt'), 'utf-8')
+    .split('\n') // Split each line to make an array for each line
+    .filter(Boolean) // Filter out any empty lines from editor or copying & pasting
+
+  return lines
 }
 
 function part1() {
