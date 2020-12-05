@@ -11,36 +11,29 @@ class BoardingPass {
     return this.row * 8 + this.column;
   }
 
-  _calculateRow(str) {
-    const rowRegions = str.slice(0, 7).split('');
-
-    let rows = new Array(128).fill(1).map((_, i) => i);
-
-    for (const rowRegion of rowRegions) {
-      const halfRow = Math.floor(rows.length / 2);
-
-      rows = rowRegion === 'F'
-        ? rows.slice(0, halfRow) // top half
-        : rows.slice(halfRow); // back half
-    }
-
-    return rows[0];
+  _calculateRow(originalStr) {
+    const str = originalStr.slice(0, 7).split('');
+    const rows = new Array(128).fill(1).map((_, i) => i);
+    return this._decodeBinarySpacePartition(str, rows)
   }
 
-  _calculateColumn(str) {
-    const columnRegions = str.slice(7).split('');
+  _calculateColumn(fullStr) {
+    const str = fullStr.slice(7).split('');
+    const columns = [0, 1, 2, 3, 4, 5, 6, 7];
+    return this._decodeBinarySpacePartition(str, columns);
+  }
 
-    let columns = [0, 1, 2, 3, 4, 5, 6, 7];
+  _decodeBinarySpacePartition(str, rows) {
+    if (rows.length === 1) { return rows[0]; }
 
-    for (const columnRegion of columnRegions) {
-      const halfColumn = Math.floor(columns.length / 2);
+    const half = Math.floor(rows.length / 2);
+    const [s] = str;
 
-      columns = columnRegion === 'L'
-        ? columns.slice(0, halfColumn) // left half
-        : columns.slice(halfColumn); // right half
+    if (s === 'F' || s == 'L') {
+      return this._decodeBinarySpacePartition(str.slice(1), rows.slice(0, half));
+    } else {
+      return this._decodeBinarySpacePartition(str.slice(1), rows.slice(half));
     }
-
-    return columns[0];
   }
 }
 
